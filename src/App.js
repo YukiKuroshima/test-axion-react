@@ -1,18 +1,45 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import Post from './Post';
 import './App.css';
+import axios from 'axios';
+
 
 class App extends Component {
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      posts: []
+    };
+  }
+
+  componentDidMount() {
+    axios.get('https://jsonplaceholder.typicode.com/posts')
+      .then(res => {
+        console.log("Fetched json" + res.data);
+        const posts = res.data.slice();
+        console.log("posts " + posts);
+        this.setState({ posts });
+      })
+      .catch(err => {
+        console.log(err);
+      });
+  }
+
+
   render() {
     return (
       <div className="App">
         <div className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
-          <h2>Welcome to React</h2>
+          <h2>Getting json via API</h2>
         </div>
-        <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
-        </p>
+        <div>
+          {this.state.posts.map(post =>
+            <Post key={post.id} post={post} />
+          )}
+          <ul>
+          </ul>
+        </div>
       </div>
     );
   }
